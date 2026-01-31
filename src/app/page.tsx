@@ -10,11 +10,13 @@ import { runReconciliation } from '@/utils/reconciliation';
 import { RefreshCw, Download, RotateCcw, Map as MapIcon, AlertCircle, CheckCircle2, FileSpreadsheet } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { FAQSection } from '@/components/FAQSection';
+import { ArticleSection } from '@/components/ArticleSection';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
   const [step, setStep] = useState<'UPLOAD' | 'RESULTS'>('UPLOAD');
   const [loading, setLoading] = useState(false);
+  const [infoTab, setInfoTab] = useState<'ARTICLE' | 'FAQ'>('ARTICLE');
   
   // Files
   const [gstrFiles, setGstrFiles] = useState<File[]>([]);
@@ -405,8 +407,32 @@ export default function Home() {
                             </motion.button>
                         </div>
                         
-                        <div className="mt-12">
-                          <FAQSection />
+                        <div className="mt-24">
+                          <div className="flex justify-center mb-8">
+                             <div className="bg-slate-200 p-1 rounded-full flex">
+                                <button 
+                                  onClick={() => setInfoTab('ARTICLE')}
+                                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${infoTab === 'ARTICLE' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                >
+                                  Guide & Article
+                                </button>
+                                <button 
+                                  onClick={() => setInfoTab('FAQ')}
+                                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${infoTab === 'FAQ' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                >
+                                  Common Questions (FAQ)
+                                </button>
+                             </div>
+                          </div>
+                          
+                          <motion.div
+                            key={infoTab}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                             {infoTab === 'ARTICLE' ? <ArticleSection /> : <FAQSection />}
+                          </motion.div>
                         </div>
                     </div>
                  </motion.div>
