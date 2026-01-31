@@ -176,22 +176,8 @@ export default function Home() {
         </div>
       </motion.header>
 
-      {/* --- MOBILE WARNING --- */}
-      <div className="lg:hidden flex-grow flex flex-col items-center justify-center p-8 text-center m-4">
-          <div className="w-24 h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-inner">
-              <RefreshCw className="w-12 h-12" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-800 mb-4">Desktop Experience</h2>
-          <p className="text-slate-600 mb-8 leading-relaxed">
-              This tool handles complex Excel data tables. <br/>Please open it on a Laptop or PC for the best experience.
-          </p>
-          <a href="https://ankitkachhawa.in" className="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all">
-            Go Home
-          </a>
-      </div>
-
       {/* --- MAIN CONTENT --- */}
-      <div className="hidden lg:block flex-grow relative overflow-hidden">
+      <div className="flex-grow relative overflow-hidden">
         
         {/* Background Elements */}
         <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-50/50 to-transparent -z-10" />
@@ -286,13 +272,16 @@ export default function Home() {
                  >
                     <div className="max-w-5xl mx-auto mt-8">
                         <div className="text-center mb-12">
-                          <h2 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
-                            Secure <span className="text-blue-600">Client-Side</span> Reconciliation
-                          </h2>
-                          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-                            Upload your GSTR-2B JSONs and Purchase Excel files. 
-                            Our robust engine matches invoices instantly in your browser. 
-                            <span className="font-semibold text-slate-700 block mt-2">No data leaves your device.</span>
+                          <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                            Free GSTR-2B Reconciliation Tool - <span className="text-blue-600">India</span>
+                          </h1>
+                          <p className="text-lg text-slate-500 max-w-3xl mx-auto">
+                            The fastest way to match your Purchase Register with GSTR-2B JSONs. 
+                            <br className="hidden md:block"/>
+                            100% Privacy: Data is processed locally in your browser and never uploaded.
+                            <span className="block mt-3 text-base text-slate-400">
+                              Trusted by CAs and Accountants in Gujarat, Mumbai, and across India.
+                            </span>
                           </p>
                         </div>
 

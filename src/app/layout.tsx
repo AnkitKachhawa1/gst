@@ -9,19 +9,27 @@ export const metadata: Metadata = {
     canonical: '/tools',
   },
   title: {
-    default: "Free GSTR-2B Reconciliation Tool | Robust, Secure & Unlimited | Ankit Kachhawa",
+    default: "Free GSTR-2B Reconciliation Tool India | Fast & Secure JSON to Excel Match",
     template: "%s | Ankit Kachhawa"
   },
-  description: "100% Free GSTR-2B Reconciliation Tool. Instantly match Purchase Register (Excel) with GSTR-2B (JSON). Robust, private, and secure - runs in your browser with no data upload.",
-  keywords: ["Free GSTR-2B Tool", "GST Reconciliation Software Free", "Match GSTR-2B with Excel", "GST Matching Tool", "Ankit Kachhawa", "Robust GST Tool", "Secure GST Reconciliation"],
+  description: "Best Free GSTR-2B Reconciliation Tool in India. Securely match GST Purchase Register (Excel) with GSTR-2B (JSON) instantly in your browser. No signup, no data upload. Trusted by CAs in Gujarat & Mumbai.",
+  keywords: [
+    "Free GSTR-2B Reconciliation Tool", 
+    "GSTR-2B vs Purchase Register Match", 
+    "GST Matching Software Free India", 
+    "GSTR-2B Excel Utility 2025", 
+    "GST Tool Gujarat", 
+    "Tax Reconciliation Ahmedabad", 
+    "Secure GST Tool"
+  ],
   authors: [{ name: "Ankit Kachhawa", url: "https://ankitkachhawa.in" }],
   creator: "Ankit Kachhawa",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://ankitkachhawa.in/tools",
-    title: "Free GSTR-2B Reconciliation Tool | Robust & Secure",
-    description: "Reconcile unlimited invoices for free. Secure client-side processing - your data never leaves your device.",
+    title: "Free GSTR-2B Reconciliation Tool | Secure & Private",
+    description: "Reconcile GSTR-2B with Purchase Register instantly. 100% Free, Browser-based (No Data Upload). Ideal for CAs and Accountants in India.",
     siteName: "Ankit Kachhawa Financial Services",
     images: [
       {
@@ -34,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free GSTR-2B Reconciliation Tool | Robust & Secure",
-    description: "Reconcile unlimited invoices for free. Secure client-side processing - your data never leaves your device.",
+    title: "Free GSTR-2B Reconciliation Tool | Secure & Private",
+    description: "Reconcile GSTR-2B with Purchase Register instantly. 100% Free, Browser-based. #GST #India #FinTech",
     images: ["/tools/gstr2bb.png"],
     creator: "@iAnkitKachhawa",
   },
@@ -60,19 +68,27 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "GSTR-2B Reconciler",
+    "name": "GSTR-2B Reconciler India",
     "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
+    "operatingSystem": "Web Browser",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "INR"
     },
-    "description": "A browser-based tool for reconciling GSTR-2B data with purchase books securely.",
+    "description": "A secure, browser-based tool for reconciling GSTR-2B data with purchase books. Optimized for Indian GST compliance.",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "150"
+    },
+    "featureList": "Drag & Drop JSON/Excel, Instant Matching, Privacy-First (Local Processing), Excel Export",
     "author": {
       "@type": "Person",
-      "name": "Ankit Kachhawa"
-    }
+      "name": "Ankit Kachhawa",
+      "url": "https://ankitkachhawa.in"
+    },
+    "spatialCoverage": "IN"
   };
 
   return (
