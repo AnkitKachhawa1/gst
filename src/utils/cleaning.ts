@@ -13,28 +13,32 @@ export function cleanNumeric(value: any): number {
 }
 
 export function cleanInvoiceNumber(invNum: any): string {
-  // Python: Handle NaN/None
   if (invNum === null || invNum === undefined) return "";
   const sVal = String(invNum).trim();
   if (sVal.toLowerCase() === 'nan' || sVal === '') return "";
 
-  // Python: Find all sequences of digits
+  // Find all sequences of digits
   const nums = sVal.match(/\d+/g);
-  if (!nums) return sVal; // Return original if no digits found
+  if (!nums) return sVal; 
 
-  // Python: Smart logic exclusions
-  const exclusions = ['2023', '2024', '2025', '2026', '23', '24', '25', '26'];
+  // Expanded exclusions for financial years and common year formats
+  const exclusions = [
+    '2022', '2023', '2024', '2025', '2026', '2027',
+    '2223', '2324', '2425', '2526', '2627',
+    '22', '23', '24', '25', '26', '27'
+  ];
 
   if (nums.length > 1) {
-    for (const n of nums) {
+    // Iterate from right to left (invoice numbers are usually at the end)
+    for (let i = nums.length - 1; i >= 0; i--) {
+      const n = nums[i];
       if (!exclusions.includes(n)) {
-        // Python: return str(int(n)) -> strips leading zeros
         return String(parseInt(n, 10)); 
       }
     }
   }
 
-  // Python: Default to the last number sequence found, stripped of leading zeros
+  // Fallback to the last sequence found if all are in exclusions or only one exists
   return String(parseInt(nums[nums.length - 1], 10));
 }
 
