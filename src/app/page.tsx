@@ -143,8 +143,39 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-slate-50 flex flex-col font-sans text-slate-900">
+    <div className="bg-slate-50 min-h-screen flex flex-col font-sans text-slate-900">
       
+      {/* --- HEADER --- */}
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+        className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-sm"
+      >
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <a href="https://ankitkachhawa.in" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-105 transition-transform">
+              G
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold text-slate-800 leading-tight group-hover:text-blue-700 transition-colors">
+                GSTR-2B Reconciler
+              </h1>
+              <span className="text-xs font-medium text-slate-500 tracking-wide uppercase">
+                by <span className="text-blue-600 font-bold">ANKIT KACHHAWA</span>
+              </span>
+            </div>
+          </a>
+          
+          <a 
+            href="https://ankitkachhawa.in"
+            className="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors bg-slate-100 hover:bg-blue-50 px-4 py-2 rounded-full"
+          >
+            Visit Main Site &rarr;
+          </a>
+        </div>
+      </motion.header>
+
       {/* --- MOBILE WARNING --- */}
       <div className="lg:hidden flex-grow flex flex-col items-center justify-center p-8 text-center m-4">
           <div className="w-24 h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-inner">
@@ -220,7 +251,7 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        <div className="p-4 container mx-auto max-w-[1600px]">
+        <div className="p-8 container mx-auto max-w-[1600px]">
            <AnimatePresence mode="wait">
              
              {/* LOADING STATE */}
@@ -253,19 +284,19 @@ export default function Home() {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.4 }}
                  >
-                    <div className="max-w-5xl mx-auto mt-2">
-                        <div className="text-center mb-6">
-                          <h2 className="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">
+                    <div className="max-w-5xl mx-auto mt-8">
+                        <div className="text-center mb-12">
+                          <h2 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
                             Secure <span className="text-blue-600">Client-Side</span> Reconciliation
                           </h2>
-                          <p className="text-sm text-slate-500 max-w-2xl mx-auto">
+                          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
                             Upload your GSTR-2B JSONs and Purchase Excel files. 
                             Our robust engine matches invoices instantly in your browser. 
-                            <span className="font-semibold text-slate-700 block mt-1">No data leaves your device.</span>
+                            <span className="font-semibold text-slate-700 block mt-2">No data leaves your device.</span>
                           </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-4 items-start">
+                        <div className="grid md:grid-cols-2 gap-8 items-start">
                             {/* GSTR-2B CARD */}
                             <div className="space-y-4">
                                 <motion.div whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 300 }}>
@@ -372,20 +403,20 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div className="mt-6 flex justify-center">
+                        <div className="mt-16 flex justify-center">
                             <motion.button 
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleProcess}
                                 disabled={gstrFiles.length === 0 || booksFiles.length === 0 || isMappingIncomplete(gstrMapping) || isMappingIncomplete(booksMapping)}
-                                className="group flex items-center gap-3 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl text-base font-bold transition-all shadow-xl hover:shadow-2xl hover:shadow-blue-500/20"
+                                className="group flex items-center gap-3 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:cursor-not-allowed text-white px-10 py-5 rounded-2xl text-lg font-bold transition-all shadow-xl hover:shadow-2xl hover:shadow-blue-500/20"
                             >
-                                <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-700 ease-in-out" />
+                                <RefreshCw className="w-6 h-6 group-hover:rotate-180 transition-transform duration-700 ease-in-out" />
                                 Start Reconciliation
                             </motion.button>
                         </div>
                         
-                        <div className="mt-8">
+                        <div className="mt-12">
                           <FAQSection />
                         </div>
                     </div>

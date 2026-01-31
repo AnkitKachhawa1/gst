@@ -77,19 +77,14 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-slate-50 font-sans text-slate-900 antialiased">
+      <body className="bg-slate-50">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Fixed Header */}
-        <Header />
-        
-        {/* Main Content with top padding to account for fixed header */}
-        <main className="flex-grow flex flex-col pt-[240px] min-h-screen">
+        <div className="min-h-screen flex flex-col">
           {children}
-        </main>
-        
+        </div>
         <Footer />
       </body>
     </html>

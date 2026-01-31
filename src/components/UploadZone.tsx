@@ -20,7 +20,7 @@ export function UploadZone({ title, accept, onFilesSelected, multiple = false, c
   const iconColor = color === 'blue' ? 'text-blue-500' : 'text-purple-500';
 
   return (
-    <div className={`border-2 border-dashed ${borderColor} rounded-xl p-6 flex flex-col items-center justify-center text-center transition cursor-pointer relative`}>
+    <div className={`border-2 border-dashed ${borderColor} rounded-xl p-8 flex flex-col items-center justify-center text-center transition cursor-pointer relative`}>
       <input 
         type="file" 
         accept={accept} 
@@ -28,13 +28,13 @@ export function UploadZone({ title, accept, onFilesSelected, multiple = false, c
         onChange={handleChange} 
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
       />
-      <UploadCloud className={`w-10 h-10 mb-2 ${iconColor}`} />
-      <h3 className="font-semibold text-base text-gray-700">{title}</h3>
-      <p className="text-xs text-gray-500 mt-1">
+      <UploadCloud className={`w-12 h-12 mb-4 ${iconColor}`} />
+      <h3 className="font-semibold text-lg text-gray-700">{title}</h3>
+      <p className="text-sm text-gray-500 mt-2">
         {multiple ? "Drag & drop multiple files" : "Drag & drop your file"} or click to browse
       </p>
-      <div className="mt-3 flex gap-2">
-         <span className="text-[10px] px-2 py-0.5 bg-white rounded border border-gray-200 text-gray-500 font-mono">
+      <div className="mt-4 flex gap-2">
+         <span className="text-xs px-2 py-1 bg-white rounded border border-gray-200 text-gray-500 font-mono">
             {accept.replace(/\./g, '').toUpperCase()}
          </span>
       </div>
