@@ -98,8 +98,8 @@ export function ResultsTable({ results, onDownloadCurrent }: ResultsTableProps) 
 
   const totals = useMemo(() => {
       return filteredResults.reduce((acc, r) => {
-          // Prefer Book value, fallback to Portal
-          const rec = r.booksRecord || r.gstr2bRecord;
+          // Prefer Portal value, fallback to Book
+          const rec = r.gstr2bRecord || r.booksRecord;
           if (rec) {
               acc.taxable += rec.taxableValue || 0;
               acc.igst += rec.igst || 0;
