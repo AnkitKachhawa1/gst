@@ -21,11 +21,14 @@ export function cleanInvoiceNumber(invNum: any): string {
   const nums = sVal.match(/\d+/g);
   if (!nums) return sVal; 
 
-  // Expanded exclusions for financial years and common year formats
+  // Expanded exclusions for years 2020 to 2030
   const exclusions = [
-    '2022', '2023', '2024', '2025', '2026', '2027',
-    '2223', '2324', '2425', '2526', '2627',
-    '22', '23', '24', '25', '26', '27'
+    // 4-digit years
+    '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030',
+    // Financial year patterns (e.g., 2425 for 2024-25)
+    '2021', '2122', '2223', '2324', '2425', '2526', '2627', '2728', '2829', '2930',
+    // 2-digit short years
+    '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'
   ];
 
   if (nums.length > 1) {
