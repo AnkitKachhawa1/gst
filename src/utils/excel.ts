@@ -55,7 +55,16 @@ async function parseExcel(
   const buf = await file.arrayBuffer();
   const wb = XLSX.read(buf);
   const sheet = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(sheet);
+  const rawRows: any[] = XLSX.utils.sheet_to_json(sheet);
+  
+  // Sanitize keys: Trim spaces from header keys to match getHeaders()
+  const rows = rawRows.map(row => {
+      const newRow: any = {};
+      Object.keys(row).forEach(key => {
+          newRow[key.trim()] = row[key];
+      });
+      return newRow;
+  });
   
   return mapRowsToRecords(rows, type, uploadId, customMapping);
 }
