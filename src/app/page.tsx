@@ -7,7 +7,7 @@ import { ColumnMapper, REQUIRED_FIELDS } from '@/components/ColumnMapper';
 import { CleanedRecord, ReconciliationResult } from '@/types';
 import { parseFile, downloadReport, getHeaders } from '@/utils/excel';
 import { runReconciliation } from '@/utils/reconciliation';
-import { RefreshCw, Download, RotateCcw, Map as MapIcon, AlertCircle, CheckCircle2, FileSpreadsheet } from 'lucide-react';
+import { RefreshCw, Download, RotateCcw, Map as MapIcon, AlertCircle, CheckCircle2, FileSpreadsheet, FileCheck2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { FAQSection } from '@/components/FAQSection';
 import { ArticleSection } from '@/components/ArticleSection';
@@ -152,29 +152,35 @@ export default function Home() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-        className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-sm"
+        className="bg-white/80 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-40 shadow-sm"
       >
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <a href="https://ankitkachhawa.in" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-105 transition-transform">
-              G
-            </div>
+          <a href="https://ankitkachhawa.in" className="flex items-center gap-3 group cursor-pointer">
+            <motion.div 
+              whileHover={{ rotate: 15, scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              className="w-10 h-10 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20"
+            >
+              <FileCheck2 className="w-6 h-6" />
+            </motion.div>
             <div className="flex flex-col">
-              <h1 className="text-xl font-bold text-slate-800 leading-tight group-hover:text-blue-700 transition-colors">
+              <h1 className="text-xl font-bold text-slate-800 leading-tight transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600">
                 GSTR-2B Reconciler
               </h1>
-              <span className="text-xs font-medium text-slate-500 tracking-wide uppercase">
-                by <span className="text-blue-600 font-bold">ANKIT KACHHAWA</span>
+              <span className="text-xs font-bold text-slate-400 tracking-wider uppercase group-hover:text-slate-600 transition-colors">
+                by <span className="text-blue-600">ANKIT KACHHAWA</span>
               </span>
             </div>
           </a>
           
-          <a 
+          <motion.a 
+            whileHover={{ scale: 1.05, backgroundColor: "#eff6ff" }}
+            whileTap={{ scale: 0.95 }}
             href="https://ankitkachhawa.in"
-            className="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors bg-slate-100 hover:bg-blue-50 px-4 py-2 rounded-full"
+            className="hidden sm:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-blue-700 transition-all bg-white border border-slate-200 hover:border-blue-200 px-5 py-2 rounded-full shadow-sm hover:shadow-md"
           >
             Visit Main Site &rarr;
-          </a>
+          </motion.a>
         </div>
       </motion.header>
 
@@ -272,25 +278,21 @@ export default function Home() {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.4 }}
                  >
-                    <div className="max-w-5xl mx-auto mt-8">
-                        <div className="text-center mb-12">
-                          <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                    <div className="max-w-5xl mx-auto mt-4">
+                        <div className="text-center mb-4">
+                          <h1 className="text-2xl font-extrabold text-slate-900 mb-1 tracking-tight">
                             Free GSTR-2B Reconciliation Tool - <span className="text-blue-600">India</span>
                           </h1>
-                          <p className="text-lg text-slate-500 max-w-3xl mx-auto">
+                          <p className="text-sm text-slate-500 max-w-3xl mx-auto">
                             The fastest way to match your Purchase Register with GSTR-2B JSONs. 
-                            <br className="hidden md:block"/>
-                            100% Privacy: Data is processed locally in your browser and never uploaded.
-                            <span className="block mt-3 text-base text-slate-400">
-                              Trusted by CAs and Accountants in Gujarat, Mumbai, and across India.
-                            </span>
+                            100% Privacy: Data is processed locally in your browser.
                           </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-8 items-start">
+                        <div className="grid md:grid-cols-2 gap-6 items-start">
                             {/* GSTR-2B CARD */}
-                            <div className="space-y-4">
-                                <motion.div whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 300 }}>
+                            <div className="space-y-3">
+                                <motion.div whileHover={{ y: -2 }} transition={{ type: 'spring', stiffness: 300 }}>
                                   <UploadZone 
                                       title="1. Upload GSTR-2B (JSON/Excel)" 
                                       accept=".json,.xlsx" 
@@ -308,42 +310,40 @@ export default function Home() {
                                       <motion.div 
                                         initial={{ opacity: 0, height: 0 }} 
                                         animate={{ opacity: 1, height: 'auto' }} 
-                                        className="bg-white p-5 rounded-2xl border border-purple-100 shadow-sm"
+                                        className="bg-white p-3 rounded-xl border border-purple-100 shadow-sm"
                                       >
-                                          <div className="flex justify-between items-center mb-3">
-                                              <h4 className="font-bold text-purple-900 flex items-center gap-2">
-                                                <FileSpreadsheet className="w-4 h-4" /> 
-                                                GSTR-2B Files ({gstrFiles.length})
+                                          <div className="flex justify-between items-center mb-1">
+                                              <h4 className="font-bold text-xs text-purple-900 flex items-center gap-1">
+                                                <FileSpreadsheet className="w-3 h-3" /> 
+                                                Files ({gstrFiles.length})
                                               </h4>
                                               <button 
                                                   onClick={() => setShowMapper({ show: true, type: 'GSTR2B' })}
-                                                  className={`text-xs font-bold flex items-center gap-1 border px-3 py-1.5 rounded-lg transition-colors ${
+                                                  className={`text-[10px] font-bold flex items-center gap-1 border px-2 py-1 rounded-md transition-colors ${
                                                       isMappingIncomplete(gstrMapping) 
                                                       ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100' 
                                                       : 'bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100'
                                                   }`}
                                               >
-                                                  {isMappingIncomplete(gstrMapping) ? <AlertCircle className="w-3 h-3" /> : <MapIcon className="w-3 h-3" />}
                                                   {isMappingIncomplete(gstrMapping) ? 'Map Columns' : 'Mapped'}
                                               </button>
                                           </div>
-                                          <ul className="text-sm text-slate-600 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                                          <ul className="text-[11px] text-slate-600 space-y-1 max-h-20 overflow-y-auto custom-scrollbar">
                                               {gstrFiles.map((f, i) => (
-                                                <li key={i} className="flex justify-between items-center bg-slate-50 px-3 py-2 rounded-lg">
-                                                  <span className="truncate max-w-[200px]">{f.name}</span>
-                                                  <span className="text-xs text-slate-400 font-mono">{(f.size/1024).toFixed(0)}KB</span>
+                                                <li key={i} className="flex justify-between items-center bg-slate-50 px-2 py-1 rounded">
+                                                  <span className="truncate max-w-[150px]">{f.name}</span>
+                                                  <button onClick={() => setGstrFiles(gstrFiles.filter((_, idx) => idx !== i))} className="text-red-400 hover:text-red-600">×</button>
                                                 </li>
                                               ))}
                                           </ul>
-                                          <button onClick={() => { setGstrFiles([]); setGstrMapping(null); }} className="text-xs text-red-500 hover:text-red-600 hover:underline mt-3 font-medium">Remove All</button>
                                       </motion.div>
                                   )}
                                 </AnimatePresence>
                             </div>
 
                             {/* BOOKS CARD */}
-                            <div className="space-y-4">
-                                <motion.div whileHover={{ y: -5 }} transition={{ type: 'spring', stiffness: 300 }}>
+                            <div className="space-y-3">
+                                <motion.div whileHover={{ y: -2 }} transition={{ type: 'spring', stiffness: 300 }}>
                                   <UploadZone 
                                       title="2. Upload Purchase Register" 
                                       accept=".xlsx" 
@@ -360,49 +360,47 @@ export default function Home() {
                                       <motion.div 
                                         initial={{ opacity: 0, height: 0 }} 
                                         animate={{ opacity: 1, height: 'auto' }}
-                                        className="bg-white p-5 rounded-2xl border border-blue-100 shadow-sm"
+                                        className="bg-white p-3 rounded-xl border border-blue-100 shadow-sm"
                                       >
-                                          <div className="flex justify-between items-center mb-3">
-                                              <h4 className="font-bold text-blue-900 flex items-center gap-2">
-                                                <FileSpreadsheet className="w-4 h-4" />
-                                                Purchase Books ({booksFiles.length})
+                                          <div className="flex justify-between items-center mb-1">
+                                              <h4 className="font-bold text-xs text-blue-900 flex items-center gap-1">
+                                                <FileSpreadsheet className="w-3 h-3" />
+                                                Files ({booksFiles.length})
                                               </h4>
                                               <button 
                                                   onClick={() => setShowMapper({ show: true, type: 'BOOKS' })}
-                                                  className={`text-xs font-bold flex items-center gap-1 border px-3 py-1.5 rounded-lg transition-colors ${
+                                                  className={`text-[10px] font-bold flex items-center gap-1 border px-2 py-1 rounded-md transition-colors ${
                                                       isMappingIncomplete(booksMapping) 
                                                       ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100' 
                                                       : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
                                                   }`}
                                               >
-                                                  {isMappingIncomplete(booksMapping) ? <AlertCircle className="w-3 h-3" /> : <MapIcon className="w-3 h-3" />}
                                                   {isMappingIncomplete(booksMapping) ? 'Map Columns' : 'Mapped'}
                                               </button>
                                           </div>
-                                          <ul className="text-sm text-slate-600 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                                          <ul className="text-[11px] text-slate-600 space-y-1 max-h-20 overflow-y-auto custom-scrollbar">
                                               {booksFiles.map((f, i) => (
-                                                <li key={i} className="flex justify-between items-center bg-slate-50 px-3 py-2 rounded-lg">
-                                                  <span className="truncate max-w-[200px]">{f.name}</span>
-                                                  <span className="text-xs text-slate-400 font-mono">{(f.size/1024).toFixed(0)}KB</span>
+                                                <li key={i} className="flex justify-between items-center bg-slate-50 px-2 py-1 rounded">
+                                                  <span className="truncate max-w-[150px]">{f.name}</span>
+                                                  <button onClick={() => setBooksFiles(booksFiles.filter((_, idx) => idx !== i))} className="text-red-400 hover:text-red-600">×</button>
                                                 </li>
                                               ))}
                                           </ul>
-                                          <button onClick={() => { setBooksFiles([]); setBooksMapping(null); }} className="text-xs text-red-500 hover:text-red-600 hover:underline mt-3 font-medium">Remove All</button>
                                       </motion.div>
                                   )}
                                 </AnimatePresence>
                             </div>
                         </div>
 
-                        <div className="mt-16 flex justify-center">
+                        <div className="mt-10 flex justify-center">
                             <motion.button 
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleProcess}
                                 disabled={gstrFiles.length === 0 || booksFiles.length === 0 || isMappingIncomplete(gstrMapping) || isMappingIncomplete(booksMapping)}
-                                className="group flex items-center gap-3 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:cursor-not-allowed text-white px-10 py-5 rounded-2xl text-lg font-bold transition-all shadow-xl hover:shadow-2xl hover:shadow-blue-500/20"
+                                className="group flex items-center gap-2 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl text-base font-bold transition-all shadow-lg hover:shadow-xl"
                             >
-                                <RefreshCw className="w-6 h-6 group-hover:rotate-180 transition-transform duration-700 ease-in-out" />
+                                <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-700 ease-in-out" />
                                 Start Reconciliation
                             </motion.button>
                         </div>
