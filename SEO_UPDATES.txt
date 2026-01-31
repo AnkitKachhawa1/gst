@@ -1,0 +1,474 @@
+# SEO UPDATES FOR GST TOOL SITE
+
+These changes are only for your **Tool Site** (gst-reco-new). You do not need to touch the Main Site.
+
+---
+
+### 1. FILE: src/app/layout.tsx
+**Copy and paste the FULL code below:**
+
+```tsx
+import type { Metadata } from "next";
+import "./globals.css";
+import Header from "@/components/MainSiteHeader";
+import Footer from "@/components/MainSiteFooter";
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://ankitkachhawa.in'),
+  title: {
+    default: "GSTR-2B Reconciler Tool | Free & Secure | Ankit Kachhawa",
+    template: "%s | Ankit Kachhawa"
+  },
+  description: "Free online GSTR-2B reconciliation tool. securely match your GST Purchase Register with GSTR-2B JSON files. 100% Client-side processing, no data upload required.",
+  keywords: ["GSTR-2B", "Reconciliation", "GST Tool", "GST Match", "Ankit Kachhawa", "Tax Tool", "GST Filing"],
+  authors: [{ name: "Ankit Kachhawa", url: "https://ankitkachhawa.in" }],
+  creator: "Ankit Kachhawa",
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://ankitkachhawa.in/tools",
+    title: "GSTR-2B Reconciler Tool | Free & Secure",
+    description: "Instantly reconcile your GSTR-2B with Purchase Books. Secure, private, and runs in your browser.",
+    siteName: "Ankit Kachhawa Financial Services",
+    images: [
+      {
+        url: "/tools/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "GSTR-2B Reconciler Tool Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GSTR-2B Reconciler Tool | Free & Secure",
+    description: "Instantly reconcile your GSTR-2B with Purchase Books. Secure, private, and runs in your browser.",
+    images: ["/tools/og-image.png"],
+    creator: "@iAnkitKachhawa",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "GSTR-2B Reconciler",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    },
+    "description": "A browser-based tool for reconciling GSTR-2B data with purchase books securely.",
+    "author": {
+      "@type": "Person",
+      "name": "Ankit Kachhawa"
+    }
+  };
+
+  return (
+    <html lang="en">
+      <body className="bg-slate-50">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <div className="min-h-screen flex flex-col">
+          {children}
+        </div>
+        <Footer />
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+### 2. FILE: src/app/page.tsx
+**Copy and paste the FULL code below:**
+
+```tsx
+'use client';
+
+import React, { useState } from 'react';
+import { UploadZone } from '@/components/UploadZone';
+import { ResultsTable } from '@/components/ResultsTable';
+import { ColumnMapper, REQUIRED_FIELDS } from '@/components/ColumnMapper';
+import { CleanedRecord, ReconciliationResult } from '@/types';
+import { parseFile, downloadReport, getHeaders } from '@/utils/excel';
+import { runReconciliation } from '@/utils/reconciliation';
+import { RefreshCw, Download, Play, RotateCcw, Map as MapIcon, AlertCircle } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
+import { FAQSection } from '@/components/FAQSection';
+
+export default function Home() {
+  const [step, setStep] = useState<'UPLOAD' | 'RESULTS'>('UPLOAD');
+  const [loading, setLoading] = useState(false);
+  
+  // Files
+  const [gstrFiles, setGstrFiles] = useState<File[]>([]);
+  const [booksFiles, setBooksFiles] = useState<File[]>([]);
+  
+  // Mapping
+  const [showMapper, setShowMapper] = useState<{ show: boolean, type: 'GSTR2B' | 'BOOKS' }>({ show: false, type: 'GSTR2B' });
+  const [gstrMapping, setGstrMapping] = useState<Record<string, string> | null>(null);
+  const [booksMapping, setBooksMapping] = useState<Record<string, string> | null>(null);
+
+  // Data
+  const [results, setResults] = useState<ReconciliationResult[]>([]);
+  const [stats, setStats] = useState({ matched: 0, mismatch: 0, missing: 0 });
+
+  // Auto-detection logic when files are added
+  const checkMapping = async (files: File[], type: 'GSTR2B' | 'BOOKS') => {
+      if (files.length === 0 || files[0].name.endsWith('.json')) return;
+      
+      const headers = await getHeaders(files[0]);
+      const lowerHeaders = headers.map(h => h.toLowerCase());
+      
+      const findKey = (keywords: string[], excludeTerms?: string[]) => {
+          for (const kw of keywords) {
+              const found = lowerHeaders.find(k => {
+                  if (excludeTerms && excludeTerms.some(term => k.includes(term))) return false;
+                  return k.includes(kw);
+              });
+              if (found) return headers[lowerHeaders.indexOf(found)];
+          }
+          return null;
+      };
+
+      const mapping: Record<string, string> = {};
+      let missingRequired = false;
+
+      REQUIRED_FIELDS.forEach(field => {
+          let keywords: string[] = [];
+          let exclude: string[] | undefined = undefined;
+
+          if (field.key === 'gstin') keywords = ['gstin', 'ctin', 'tin'];
+          if (field.key === 'invoiceDate') {
+              keywords = ['invoice date', 'document date', 'bill date', 'date', 'dt'];
+              exclude = ['supfildt', 'filing'];
+          }
+          if (field.key === 'invoiceValue') {
+              keywords = [
+                  'invoice value', 
+                  'total invoice value', 
+                  'total invoice amount', 
+                  'invoice total', 
+                  'grand total', 
+                  'total payable', 
+                  'total tax', 
+                  'gross total',
+                  'bill amount', 
+                  'invoice amount', 
+                  'total value', 
+                  'total',
+                  'val'
+              ];
+              exclude = ['taxable', 'net', 'assessable', 'amount before', 'tax val', 'rate'];
+          }
+          if (field.key === 'taxableValue') keywords = ['taxable value', 'taxable', 'txval'];
+          if (field.key === 'partyName') keywords = ['party name', 'trade name', 'supplier name', 'name', 'party', 'trdnm'];
+          if (field.key === 'igst') keywords = ['igst', 'integrated tax'];
+          if (field.key === 'cgst') keywords = ['cgst', 'central tax'];
+          if (field.key === 'sgst') keywords = ['sgst', 'state tax', 'utgst'];
+
+          const match = findKey(keywords, exclude);
+          if (match) {
+              mapping[field.key] = match;
+          } else if (field.required) {
+              missingRequired = true;
+          }
+      });
+
+      if (type === 'GSTR2B') setGstrMapping(mapping);
+      else setBooksMapping(mapping);
+
+      // If missing required fields, auto-open the mapper
+      if (missingRequired) {
+          setShowMapper({ show: true, type });
+      }
+  };
+
+  const handleProcess = async () => {
+    if (gstrFiles.length === 0 || booksFiles.length === 0) {
+        alert("Please upload both GSTR-2B and Books files.");
+        return;
+    }
+
+    setLoading(true);
+    try {
+        // 1. Parse GSTR-2B
+        let allGstr: CleanedRecord[] = [];
+        for (const file of gstrFiles) {
+            const records = await parseFile(file, 'GSTR2B', uuidv4(), gstrMapping || undefined);
+            allGstr = [...allGstr, ...records];
+        }
+
+        // 2. Parse Books
+        let allBooks: CleanedRecord[] = [];
+        for (const file of booksFiles) {
+             const records = await parseFile(file, 'BOOKS', uuidv4(), booksMapping || undefined);
+             allBooks = [...allBooks, ...records];
+        }
+
+        // 3. Reconcile
+        await new Promise(r => setTimeout(r, 500));
+        
+        const res = runReconciliation(allBooks, allGstr);
+        setResults(res);
+        
+        setStats({
+            matched: res.filter(r => r.status === 'MATCHED').length,
+            mismatch: res.filter(r => r.status.includes('MISMATCH') || r.status.includes('INFERRED')).length,
+            missing: res.filter(r => r.status.includes('MISSING')).length
+        });
+        
+        setStep('RESULTS');
+
+    } catch (e: any) {
+        console.error(e);
+        alert("Error processing files: " + e.message);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const isMappingIncomplete = (mapping: Record<string, string> | null) => {
+      if (!mapping) return true;
+      return REQUIRED_FIELDS.some(f => f.required && !mapping[f.key]);
+  };
+
+  const handleReset = () => {
+      if(confirm("Start fresh? All current data will be lost.")) {
+          setResults([]);
+          setGstrFiles([]);
+          setBooksFiles([]);
+          setGstrMapping(null);
+          setBooksMapping(null);
+          setStep('UPLOAD');
+      }
+  };
+
+  return (
+    <div className="bg-slate-50 font-sans text-slate-900 flex-grow flex flex-col">
+      {/* Minimal Top Bar for Navigation */}
+      <div className="bg-white border-b px-6 py-3 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+          <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">G</div>
+              <h1 className="font-bold text-slate-700 hidden sm:inline text-lg">GSTR-2B Reconciler</h1>
+          </div>
+          <a 
+            href="https://ankitkachhawa.in" 
+            className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors"
+          >
+            ← Back to ankitkachhawa.in
+          </a>
+      </div>
+
+      {/* Mobile Only Message */}
+      <div className="lg:hidden flex-grow flex flex-col items-center justify-center p-8 text-center bg-white m-4 rounded-2xl shadow-sm border border-slate-100">
+          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6">
+              <RefreshCw className="w-10 h-10" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-3">Desktop Only Tool</h2>
+          <p className="text-slate-500 max-w-xs mb-8">
+              The GSTR-2B Reconciler requires a large screen to manage Excel files and side-by-side data comparison. Please open this link on your Laptop or PC.
+          </p>
+          <a 
+            href="https://ankitkachhawa.in" 
+            className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold shadow-md hover:bg-blue-700 transition-all"
+          >
+            Go to Main Website
+          </a>
+      </div>
+
+      {/* Desktop Tool Container */}
+      <div className="hidden lg:block flex-grow">
+        {/* Mapper Modal */}
+        {showMapper.show && (
+          <ColumnMapper 
+              files={showMapper.type === 'GSTR2B' ? gstrFiles : booksFiles}
+              sourceType={showMapper.type}
+              initialMapping={showMapper.type === 'GSTR2B' ? gstrMapping : booksMapping}
+              onMappingConfirmed={(map) => {
+                  if (showMapper.type === 'GSTR2B') setGstrMapping(map);
+                  else setBooksMapping(map);
+                  setShowMapper({ show: false, type: 'GSTR2B' });
+              }}
+              onCancel={() => setShowMapper({ show: false, type: 'GSTR2B' })}
+          />
+        )}
+
+        {step === 'RESULTS' && (
+          <div className="bg-white border-b px-6 py-4 flex justify-end gap-3 shadow-sm">
+              <button 
+                  onClick={() => downloadReport(results)}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
+              >
+                  <Download className="w-4 h-4" />
+                  Export Report
+              </button>
+              <button 
+                  onClick={handleReset}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition"
+              >
+                  <RotateCcw className="w-4 h-4" />
+                  Reset
+              </button>
+          </div>
+        )}
+
+        <div className="p-6 container mx-auto max-w-[1600px]">
+           {loading ? (
+               <div className="flex flex-col items-center justify-center h-[60vh] animate-in fade-in zoom-in duration-500">
+                   <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-6"></div>
+                   <h2 className="text-2xl font-semibold text-slate-700">Crunching Numbers...</h2>
+                   <p className="text-slate-500 mt-2">Parsing {gstrFiles.length + booksFiles.length} files and matching invoices.</p>
+               </div>
+           ) : step === 'UPLOAD' ? (
+               <>
+                  <div className="max-w-4xl mx-auto mt-10">
+                      <div className="grid md:grid-cols-2 gap-8">
+                          <div className="space-y-4">
+                              <UploadZone 
+                                  title="1. Upload GSTR-2B" 
+                                  accept=".json,.xlsx" 
+                                  multiple 
+                                  color="purple"
+                                  onFilesSelected={files => {
+                                      const newFiles = [...gstrFiles, ...files];
+                                      setGstrFiles(newFiles);
+                                      checkMapping(files, 'GSTR2B');
+                                  }} 
+                              />
+                              {gstrFiles.length > 0 && (
+                                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                                      <div className="flex justify-between items-center mb-2">
+                                          <h4 className="text-sm font-semibold text-purple-800">Files ({gstrFiles.length}):</h4>
+                                          <button 
+                                              onClick={() => setShowMapper({ show: true, type: 'GSTR2B' })}
+                                              className={`text-xs flex items-center gap-1 border px-2 py-1 rounded transition ${
+                                                  isMappingIncomplete(gstrMapping) 
+                                                  ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100' 
+                                                  : 'bg-white border-purple-200 text-purple-700 hover:bg-purple-100'
+                                              }`}
+                                          >
+                                              {isMappingIncomplete(gstrMapping) ? <AlertCircle className="w-3 h-3" /> : <MapIcon className="w-3 h-3" />}
+                                              {isMappingIncomplete(gstrMapping) ? 'Mapping Required' : 'Mapped'}
+                                          </button>
+                                      </div>
+                                      <ul className="text-xs text-purple-700 space-y-1 max-h-32 overflow-y-auto">
+                                          {gstrFiles.map((f, i) => <li key={i} className="flex justify-between">{f.name} <span className="opacity-50">{(f.size/1024).toFixed(0)}kb</span></li>)}
+                                      </ul>
+                                      <button onClick={() => { setGstrFiles([]); setGstrMapping(null); }} className="text-xs text-purple-600 hover:underline mt-2">Clear all</button>
+                                  </div>
+                              )}
+                          </div>
+
+                          <div className="space-y-4">
+                              <UploadZone 
+                                  title="2. Upload Purchase Books" 
+                                  accept=".xlsx" 
+                                  color="blue"
+                                  onFilesSelected={files => {
+                                      const newFiles = [...booksFiles, ...files];
+                                      setBooksFiles(newFiles);
+                                      checkMapping(files, 'BOOKS');
+                                  }} 
+                              />
+                              {booksFiles.length > 0 && (
+                                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                      <div className="flex justify-between items-center mb-2">
+                                          <h4 className="text-sm font-semibold text-blue-800">Files ({booksFiles.length}):</h4>
+                                          <button 
+                                              onClick={() => setShowMapper({ show: true, type: 'BOOKS' })}
+                                              className={`text-xs flex items-center gap-1 border px-2 py-1 rounded transition ${
+                                                  isMappingIncomplete(booksMapping) 
+                                                  ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100' 
+                                                  : 'bg-white border-blue-200 text-blue-700 hover:bg-blue-100'
+                                              }`}
+                                          >
+                                              {isMappingIncomplete(booksMapping) ? <AlertCircle className="w-3 h-3" /> : <MapIcon className="w-3 h-3" />}
+                                              {isMappingIncomplete(booksMapping) ? 'Mapping Required' : 'Mapped'}
+                                          </button>
+                                      </div>
+                                      <ul className="text-xs text-blue-700 space-y-1 max-h-32 overflow-y-auto">
+                                          {booksFiles.map((f, i) => <li key={i} className="flex justify-between">{f.name} <span className="opacity-50">{(f.size/1024).toFixed(0)}kb</span></li>)}
+                                      </ul>
+                                      <button onClick={() => { setBooksFiles([]); setBooksMapping(null); }} className="text-xs text-blue-600 hover:underline mt-2">Clear all</button>
+                                  </div>
+                              )}
+                          </div>
+                      </div>
+
+                      <div className="mt-12 flex justify-center">
+                          <button 
+                              onClick={handleProcess}
+                              disabled={gstrFiles.length === 0 || booksFiles.length === 0 || isMappingIncomplete(gstrMapping) || isMappingIncomplete(booksMapping)}
+                              className="group flex items-center gap-3 bg-slate-900 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                          >
+                              <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
+                              Start Reconciliation
+                          </button>
+                      </div>
+                      
+                      <div className="mt-8 text-center text-sm text-gray-400">
+                          <p>All processing happens securely in your browser.</p>
+                          <p>No data is uploaded to any server.</p>
+                      </div>
+                  </div>
+
+                  <FAQSection />
+               </>
+           ) : (
+               <div className="h-[calc(100vh-140px)] flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                   <ResultsTable 
+                      results={results} 
+                      onDownloadCurrent={(filtered) => downloadReport(filtered)}
+                   />
+               </div>
+           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### 3. FILE: public/robots.txt
+**Create this file if it doesn't exist, and paste:**
+
+```text
+User-agent: *
+Allow: /
+
+Sitemap: https://ankitkachhawa.in/sitemap.xml
+```
+
+---
+
+### How to commit (If using VS Code / Terminal):
+1.  Save all these files.
+2.  Open your terminal.
+3.  Type `git add .`
+4.  Type `git commit -m "SEO updates"`
+5.  Type `git push`

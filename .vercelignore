@@ -1,0 +1,19 @@
+# Ignore the main site backup folder
+@ankit kachhawa main site/
+
+# Ignore system files
+node_modules
+.next
+.git
+.DS_Store
+*.log
+
+# Ignore documentation files we made for you
+CONTEXT.md
+PROGRESS.md
+SETUP_INSTRUCTIONS.md
+MAIN_SITE_UPDATES.md
+VERCEL_JSON_FOR_MAIN_SITE.json
+
+# Ignore raw data files if they are just for testing
+jsonss/
