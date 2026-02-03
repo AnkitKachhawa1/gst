@@ -9,11 +9,10 @@
       ]
     }
   ],
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/",
-      "destination": "/tool",
-      "permanent": false
+      "source": "/tools/gstr2b-reco/:match*",
+      "destination": "/tools/gstr2b-reco/index.html"
     }
   ]
 }
