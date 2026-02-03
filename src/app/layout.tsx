@@ -98,7 +98,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <div className="min-h-screen flex flex-col">
+        <Header />
+        <div className="min-h-screen flex flex-col pt-[80px]">
           {children}
         </div>
         <Footer />

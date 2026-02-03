@@ -147,43 +147,6 @@ export default function Home() {
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col font-sans text-slate-900">
       
-      {/* --- HEADER --- */}
-      <motion.header 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-        className="bg-white/80 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-40 shadow-sm"
-      >
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <a href="https://ankitkachhawa.in" className="flex items-center gap-3 group cursor-pointer">
-            <motion.div 
-              whileHover={{ rotate: 15, scale: 1.1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              className="w-10 h-10 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20"
-            >
-              <FileCheck2 className="w-6 h-6" />
-            </motion.div>
-            <div className="flex flex-col">
-              <h1 className="text-xl font-bold text-slate-800 leading-tight transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600">
-                GSTR-2B Reconciler
-              </h1>
-              <span className="text-xs font-bold text-slate-400 tracking-wider uppercase group-hover:text-slate-600 transition-colors">
-                by <span className="text-blue-600">ANKIT KACHHAWA</span>
-              </span>
-            </div>
-          </a>
-          
-          <motion.a 
-            whileHover={{ scale: 1.05, backgroundColor: "#eff6ff" }}
-            whileTap={{ scale: 0.95 }}
-            href="https://ankitkachhawa.in"
-            className="hidden sm:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-blue-700 transition-all bg-white border border-slate-200 hover:border-blue-200 px-5 py-2 rounded-full shadow-sm hover:shadow-md"
-          >
-            Visit Main Site &rarr;
-          </motion.a>
-        </div>
-      </motion.header>
-
       {/* --- MAIN CONTENT --- */}
       <div className="flex-grow relative overflow-hidden">
         

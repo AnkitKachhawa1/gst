@@ -1,139 +1,217 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Facebook, Twitter, Instagram, Linkedin, Phone, LineChart, FileText, Newspaper, Wrench, Mail, MapPin } from 'lucide-react';
 
 const Header = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setShowProfilePopup(true);
+  };
+
   const socialLinks = [
-    {
-      name: 'Facebook',
-      url: 'https://www.facebook.com/ankit.kachhawa.7',
-      icon: (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-      ),
-    },
-    {
-      name: 'Instagram',
-      url: 'https://instagram.com/Ankitkachhawa',
-      icon: (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12.017 0C8.396 0 7.989.013 7.041.048 6.094.082 5.52.204 5.012.388a6.5 6.5 0 0 0-2.346 1.267c-.905.745-1.568 1.644-1.943 2.669C.344 5.192.224 5.793.157 6.739.123 7.686.11 8.094.11 11.715s.013 4.029.048 4.976c.034.947.156 1.548.34 2.016a6.5 6.5 0 0 0 1.267 2.346c.745.905 1.644 1.568 2.669 1.943.468.184 1.069.304 2.015.34.947.035 1.355.048 4.976.048s4.029-.013 4.976-.048c.947-.034 1.548-.156 2.016-.34a6.5 6.5 0 0 0 2.346-1.267c.905-.745 1.568-1.644 1.943-2.669.184-.468.304-1.069.34-2.015.035-.947.048-1.355.048-4.976s-.013-4.029-.048-4.976c-.034-.947-.156-1.548-.34-2.016a6.5 6.5 0 0 0-1.267-2.346C20.744 1.347 19.845.684 18.82.309 18.352.125 17.751.005 16.805-.029 15.858-.064 15.45-.077 11.829-.077s-4.029.013-4.976.048zm-.188 21.511c-3.297 0-3.684-.014-4.97-.048-.784-.034-1.312-.142-1.718-.295a2.9 2.9 0 0 1-1.08-.703 2.9 2.9 0 0 1-.703-1.08c-.153-.406-.261-.934-.295-1.718-.034-1.286-.048-1.673-.048-4.97s.014-3.684.048-4.97c.034-.784.142-1.312.295-1.718a2.9 2.9 0 0 1 .703-1.08 2.9 2.9 0 0 1 1.08-.703c.406-.153.934-.261 1.718-.295 1.286-.034 1.673-.048 4.97-.048s3.684.014 4.97.048c.784.034 1.312.142 1.718.295a2.9 2.9 0 0 1 1.08.703c.31.31.564.68.703 1.08.153.406.261.934.295 1.718.034 1.286.048 1.673.048 4.97s-.014 3.684-.048 4.97c-.034.784-.142 1.312-.295 1.718a2.9 2.9 0 0 1-.703 1.08 2.9 2.9 0 0 1-1.08.703c-.406.153-.934.261-1.718.295-1.286.034-1.673.048-4.97.048zm0-5.838c-2.708 0-4.9-2.192-4.9-4.9 0-2.708 2.192-4.9 4.9-4.9 2.708 0 4.9 2.192 4.9 4.9 0 2.708-2.192 4.9-4.9 4.9zm0-12.814c-4.36 0-7.914 3.554-7.914 7.914s3.554 7.914 7.914 7.914 7.914-3.554 7.914-7.914-3.554-7.914-7.914-7.914zm15.507-2.227c-1.018 0-1.843.825-1.843 1.843s.825 1.843 1.843 1.843 1.843-.825 1.843-1.843-.825-1.843-1.843-1.843z"/>
-        </svg>
-      ),
-    },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/iAnkitKachhawa',
-      icon: (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-      ),
-    },
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/ankit-kachhawa-9964421a2',
-      icon: (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-        </svg>
-      ),
-    },
-    {
-      name: 'WhatsApp',
-      url: 'https://wa.me/919510074375',
-      icon: (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-        </svg>
-      ),
-    },
-    {
-      name: 'Call',
-      url: 'tel:+919510074375',
-      icon: (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-        </svg>
-      ),
-    },
+    { name: 'Facebook', url: 'https://www.facebook.com/ankit.kachhawa.7', icon: <Facebook size={18} /> },
+    { name: 'Instagram', url: 'https://instagram.com/Ankitkachhawa', icon: <Instagram size={18} /> },
+    { name: 'Twitter', url: 'https://twitter.com/iAnkitKachhawa', icon: <Twitter size={18} /> },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ankit-kachhawa-9964421a2', icon: <Linkedin size={18} /> },
+    { name: 'WhatsApp', url: 'https://wa.me/919510074375', icon: <Phone size={18} /> },
   ];
+
+  const isActiveLink = (path: string) => {
+      if (path === '/') return pathname === '/' || pathname === '/tool'; // Match root or old tool path
+      if (path.startsWith('http')) return false; // External links are never 'active' in Next.js sense usually, or handle differently
+      return pathname.startsWith(path);
+  };
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-50 bg-cover bg-center shadow-lg bg-[#3498db] h-[180px]">
-        {/* We use a solid color fallback if the background image fails, but you should add header-bg.jpg to public folder */}
-        <div className="backdrop-brightness-95 backdrop-blur-sm h-full flex items-center px-4 sm:px-6 lg:px-8">
-          <div className="flex-shrink-0">
-            <div className="w-[110px] h-[110px] sm:w-[120px] sm:h-[120px] rounded-full overflow-hidden border-4 border-white shadow-2xl ring-2 ring-white/20 bg-white">
-              {/* Fallback avatar if profile.jpg is missing */}
-              <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 font-bold text-4xl">A</div>
+      <header 
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-white/95 backdrop-blur-md shadow-md py-2' 
+            : 'bg-white py-3 sm:py-4 border-b border-gray-100'
+        }`}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            
+            {/* Logo & Profile Section - Interactive Trigger */}
+            <div 
+              className="relative z-50"
+              onMouseEnter={handleMouseEnter}
+              onClick={() => setShowProfilePopup(!showProfilePopup)}
+            >
+              <a href="https://ankitkachhawa.in" className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
+                <div className="relative">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-blue-600/20 group-hover:border-blue-600 group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-105 bg-gray-100">
+                    <img src="https://ankitkachhawa.in/profile.jpg" alt="Ankit Kachhawa" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+                     <img src="https://ankitkachhawa.in/verified-badge.png" alt="Verified" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
+                  </div>
+                </div>
+                
+                <div className="flex flex-col justify-center">
+                  <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 leading-tight uppercase tracking-wide group-hover:text-blue-600 transition-colors">
+                    Ankit Kachhawa
+                  </h1>
+                  <span className="text-[10px] sm:text-xs text-gray-500 font-semibold tracking-wider uppercase mt-0.5">
+                    Financial Services
+                  </span>
+                </div>
+              </a>
             </div>
-          </div>
 
-          <div className="flex-1 ml-4 sm:ml-8 flex flex-col justify-center min-w-0">
-            <a href="https://ankitkachhawa.in" className="block mb-2 sm:mb-3">
-              <div className="flex items-center gap-2 mb-1 sm:mb-2">
-                <h1 className="text-lg xs:text-xl sm:text-4xl font-bold text-white truncate">ANKIT KACHHAWA</h1>
-                {/* Verified badge placeholder */}
-                <div className="w-5 h-5 bg-blue-400 rounded-full border border-white text-[10px] flex items-center justify-center text-white">✓</div>
-              </div>
-              <p className="text-xs sm:text-lg text-white/90 font-medium">Professional Financial Solutions</p>
-            </a>
-
-            <div className="flex items-center gap-1.5 sm:gap-2.5 mt-1 sm:mt-2 flex-wrap">
-              {socialLinks.map((social) => (
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-2 lg:space-x-6">
+              {[
+                { to: "https://ankitkachhawa.in/", icon: LineChart, label: "Mutual Fund" },
+                { to: "https://ankitkachhawa.in/gst", icon: FileText, label: "GST" },
+                { to: "https://ankitkachhawa.in/updates", icon: Newspaper, label: "Updates" },
+              ].map((item) => (
+                <a 
+                  key={item.to}
+                  href={item.to} 
+                  className={`
+                    flex items-center px-3 py-2 rounded-lg text-xs lg:text-sm font-bold uppercase tracking-wider transition-all duration-300
+                    text-gray-600 hover:text-blue-600 hover:bg-gray-50 hover:translate-y-[-1px]
+                  `}
+                >
+                  <item.icon size={16} className="mr-2" />
+                  <span>{item.label}</span>
+                </a>
+              ))}
+              
+              <Link 
+                href="/" 
+                className={`
+                  flex items-center px-3 py-2 rounded-lg text-xs lg:text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:translate-y-[-1px]
+                  text-blue-600 bg-blue-600/10 shadow-sm translate-y-[-1px]
+                `}
+              >
+                <Wrench size={16} className="mr-2" />
+                <span>Tools</span>
+              </Link>
+            </nav>
+  
+            {/* Social Icons - Optimized for Mobile */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              {socialLinks.map((social, index) => (
                 <a
                   key={social.name}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white/15 hover:bg-white/25 backdrop-blur-sm rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg group"
+                  className={`
+                    p-1.5 sm:p-2 text-gray-400 hover:text-white hover:bg-gradient-to-br hover:from-blue-600 hover:to-blue-700 rounded-full transition-all duration-300 hover:shadow-md transform hover:-translate-y-0.5
+                    ${index > 2 ? 'hidden sm:block' : ''}
+                  `}
                   aria-label={social.name}
                 >
-                  <span className="text-white group-hover:text-white/90 transition-colors duration-300">
-                    {social.icon}
-                  </span>
+                  {social.icon}
                 </a>
               ))}
             </div>
+
           </div>
         </div>
       </header>
-      
-      {/* Sub Navigation */}
-      <nav className="fixed top-[180px] left-0 w-full bg-white border-b border-gray-200 z-40 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center">
-            <div className="flex space-x-8">
-              <a
-                href="https://ankitkachhawa.in/"
-                className="flex items-center py-4 px-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 transition-colors duration-300"
-              >
-                <span>Mutual Fund</span>
-              </a>
-              <a
-                href="https://ankitkachhawa.in/gst"
-                className="flex items-center py-4 px-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 transition-colors duration-300"
-              >
-                <span>GST Services</span>
-              </a>
-              <Link
-                href="/"
-                className="flex items-center py-4 px-2 text-sm font-medium text-[#3498db] border-b-2 border-[#3498db] transition-colors duration-300"
-              >
-                <span>GST Tool</span>
-              </Link>
-              <a
-                href="https://ankitkachhawa.in/updates"
-                className="flex items-center py-4 px-2 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300 transition-colors duration-300"
-              >
-                <span>Updates</span>
-              </a>
+
+      {/* Profile Popup Overlay */}
+      {showProfilePopup && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-fade-in"
+          onClick={() => setShowProfilePopup(false)}
+        >
+          <div 
+            className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] w-full max-w-xs sm:max-w-sm transform transition-all animate-slide-up relative overflow-hidden ring-1 ring-black/5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Decorative Background Header */}
+            <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-blue-600 via-blue-500 to-blue-800 opacity-100" />
+            
+            {/* Glass Overlay Pattern */}
+            <div className="absolute top-0 left-0 w-full h-32 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay" />
+
+            {/* Profile Info */}
+            <div className="relative flex flex-col items-center text-center mt-12 px-6 pb-8">
+              <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden mb-5 bg-white z-10 group">
+                <img src="https://ankitkachhawa.in/profile.jpg" alt="Ankit Kachhawa" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              </div>
+              
+              <h2 className="text-2xl font-extrabold text-gray-900 uppercase tracking-tight mb-1">Ankit Kachhawa</h2>
+              <p className="text-blue-600 font-bold text-xs uppercase tracking-widest mb-6">Financial Consultant</p>
+              
+              <div className="w-full space-y-3 text-left bg-gray-50/80 rounded-2xl p-5 border border-gray-100 shadow-inner">
+                <div className="flex items-center gap-4 text-gray-600 group cursor-pointer hover:bg-white p-2 rounded-lg transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <Mail size={16} />
+                  </div>
+                  <a href="mailto:ankitkachchhawa@gmail.com" className="text-sm font-semibold truncate hover:text-blue-600 transition-colors">ankitkachchhawa@gmail.com</a>
+                </div>
+                
+                <div className="flex items-center gap-4 text-gray-600 group cursor-pointer hover:bg-white p-2 rounded-lg transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0">
+                     <Phone size={16} />
+                  </div>
+                  <a href="tel:+919510074375" className="text-sm font-semibold hover:text-green-600 transition-colors">+91 95100 74375</a>
+                </div>
+                
+                <div className="flex items-center gap-4 text-gray-600 group cursor-pointer hover:bg-white p-2 rounded-lg transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center flex-shrink-0">
+                     <MapPin size={16} />
+                  </div>
+                  <span className="text-sm font-semibold">Deesa, Gujarat, India</span>
+                </div>
+              </div>
+
+              <div className="mt-8 w-full">
+                <a 
+                  href="https://wa.me/919510074375" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 uppercase text-sm tracking-wider"
+                >
+                  <Phone size={18} />
+                  Book Consultation
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </nav>
+      )}
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(10px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out forwards;
+        }
+        .animate-slide-up {
+          animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
     </>
   );
 };
